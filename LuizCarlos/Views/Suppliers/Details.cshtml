@@ -1,11 +1,11 @@
 ﻿@model Model.Registers.Supplier
 
 @{	Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "Visualizando detalhes de um FABRICANTE";
+    ViewBag.Title = "Viewing details of a SUPPLIER";
 }
 <div class="panel	panel-primary">
     <div class="panel-heading">
-        Visualizando detalhes de um	SUPPLIER
+        Viewing details of a SUPPLIER
     </div>
     <div class="panel-body">
         <div class="form-group">
@@ -20,8 +20,8 @@
         </div>
     </div>
     <div class="panel-footer	panel-info">
-        @Html.ActionLink("Alterar", "Edit", new { id = Model.SupplierID }, new { @class = "btn	btn-info" })
-        @Html.ActionLink("Retornar para a listagem", "Index", null, new { @class = "btn	btn-info" })
+        @Html.ActionLink("Edit", "Edit", new { id = Model.SupplierID }, new { @class = "btn	btn-info" })
+        @Html.ActionLink("Return to the list", "Index", null, new { @class = "btn	btn-info" })
     </div>
 </div>
 @Html.Partial("~/Views/Products/_PorSupplier.cshtml",Model.Products.ToList())

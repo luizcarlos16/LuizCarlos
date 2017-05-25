@@ -2,7 +2,7 @@
 
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "Registrando um	NOVO FABRICANTE";
+    ViewBag.Title = "Registering a NEW SUPPLIER";
 
 }
 
@@ -11,7 +11,7 @@
     @Html.AntiForgeryToken()
 
 <div class="panel	panel-primary">
-    <div class="panel-heading">	Registro de	um NOVO	FABRICANTE</div>
+    <div class="panel-heading">	Registration of a NEW SUPPLIER</div>
     <div class="panel-body">
         <div class="form-horizontal">
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
@@ -27,7 +27,7 @@
     <div class="panel-footer panel-info">
         <div class="col-md-offset-2 col-md-10">
             <input type="submit" value="Adicionar Supplier" class="btn btn-danger" />
-            @Html.ActionLink("Retornar para a listagem de Suppliers", "Index", null, new { @class = "btn btn-warning" })
+            @Html.ActionLink("Return to the listing of Suppliers", "Index", null, new { @class = "btn btn-warning" })
         </div>
         <br /> <br />
     </div>

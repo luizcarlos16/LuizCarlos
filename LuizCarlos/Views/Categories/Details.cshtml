@@ -1,11 +1,11 @@
 ﻿@model Model.Tables.Category
 
 @{	Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "Visualizando	detalhes	de	uma	CATEGORIA";
+    ViewBag.Title = "Viewing details of a CATEGORY";
 }
 <div class="panel	panel-primary">
     <div class="panel-heading">
-        Visualizando detalhes de uma Categoria
+        Viewing details of a CATEGORY
     </div>
     <div class="panel-body">
         <div class="form-group">
@@ -20,8 +20,8 @@
         </div>
     </div>
     <div class="panel-footer	panel-info">
-        @Html.ActionLink("Alterar", "Edit", new { id = Model.CategoryID }, new { @class = "btn	btn-info" })
-        @Html.ActionLink("Retornar	para	a	listagem", "Index", null, new { @class = "btn	btn-info" })
+        @Html.ActionLink("Edit", "Edit", new { id = Model.CategoryID }, new { @class = "btn	btn-info" })
+        @Html.ActionLink("Return to the list", "Index", null, new { @class = "btn	btn-info" })
     </div>
 </div>
 @Html.Partial("~/Views/Categories/_PorCategorie.cshtml", Model.Products.ToList())

@@ -3,11 +3,11 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title =
-    "Visualizando detalhes de uma CATEGORIA";
+    "Viewing details of a CATEGORY";
 }
 <div class="panel panel-primary">
     <div class="panel-heading">
-        Dados da categoria a ser removido
+        Category data to be removed
     </div>
     <div class="panel-body">
         <div class="form-group">
@@ -35,7 +35,7 @@
             @Html.AntiForgeryToken()
             <input type="submit" value="Remover CATEGORIE" class="btn btn-danger" />
             @Html.ActionLink(
-        "Retornar para a listagem",
+        "Return to the list",
         "Index", null, new
         {
             @class =

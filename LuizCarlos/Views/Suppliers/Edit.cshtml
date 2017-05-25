@@ -1,15 +1,15 @@
 ﻿@model Model.Registers.Supplier
 
 @{
-Layout = "~/Views/Shared/_Layout.cshtml";
-ViewBag.Title ="Alterando os dados de um FABRICANTE";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Changing the data of a SUPPLIER";
 }
 @using (Html.BeginForm())
 {
 @Html.AntiForgeryToken()
 <div class="panel panel-primary">
     <div class="panel-heading">
-        Alteração dos dados de um SUPPLIER
+        Changing the data of a SUPPLIER
     </div>
     <div class="panel-body">
         <div class="form-horizontal">
@@ -26,7 +26,7 @@ ViewBag.Title ="Alterando os dados de um FABRICANTE";
         <div class="panel-footer panel-info">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Gravar alterações" class="btn btn-info" />
-                @Html.ActionLink("Retornar para a listagem de Suppliers","Index", null, new { @class ="btn btn-warning" })
+                @Html.ActionLink("Return to the list of Suppliers", "Index", null, new { @class ="btn btn-warning" })
             </div>
             <br />
             <br />

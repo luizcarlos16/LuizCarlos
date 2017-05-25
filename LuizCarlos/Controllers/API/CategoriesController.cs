@@ -15,28 +15,7 @@ namespace LuizCarlos.Controllers.API
 {
     public class CategoriesController : ApiController
     {
-        public EFContext context = new EFContext();
-
-        private async Task<HttpResponseMessage> FromApi(long? id, Action<HttpResponseMessage> action)
-        {
-            using (var client = new HttpClient())
-            {
-                var baseURL = string.Format("{0}://{1}"),
-                    HttpContext.Request.Url.Scheme,
-                HttpContext.Request.Url.Authority);
-                client.BaseAddress = new System.Uri(baseUrl);
-                client.DefaultRequestHeaders.Clear();
-
-                var url = "Api/Categories";
-                if (id != null)
-                    url = "Api/Categories/" + id;
-
-                var request = await client.GetAsync(url);
-                if (action.Invoke(request)) ;
-
-                return request;
-            }
-        }
+        public EFContexts context = new EFContexts();
 
         private CategoryService categoryService = new CategoryService();
 

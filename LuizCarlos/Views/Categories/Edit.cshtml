@@ -3,14 +3,14 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title =
-    "Alterando os dados de uma Categoria";
+    "Changing the data of a Category";
 }
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
     <div class="panel panel-primary">
         <div class="panel-heading">
-            Alteração dos dados de uma Category
+            Changing the data of a Category
         </div>
         <div class="panel-body">
             <div class="form-horizontal">
@@ -46,7 +46,7 @@
                 <div class="col-md-offset-2 col-md-10">
                     <input type="submit" value="Gravar alterações" class="btn btn-info" />
                     @Html.ActionLink(
-     "Retornar para a listagem das Categories",
+     "Return to the list of Categories",
      "Index", null, new
      {
          @class =

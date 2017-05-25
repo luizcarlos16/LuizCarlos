@@ -3,7 +3,7 @@
 
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "Listagem de PRODUTOS";
+    ViewBag.Title = "PRODUCTS Listing";
 }
 @if (@TempData["Message"] != null)
 {
@@ -13,7 +13,7 @@
 }
 <div class="panel	panel-primary">
     <div class="panel-heading">
-        Relação	de	PRODUTOS	registrados
+        List of registered PRODUCTS
     </div>
     <div class="panel-body">
         <table class="table	table-striped	table-hover">
@@ -24,6 +24,7 @@
                     </th>
                     <th>Category</th>
                     <th>Supplier</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -50,7 +51,7 @@
         </table>
     </div>
     <div class="panel-footer	panel-info">
-        @Html.ActionLink("Registrar	um	novo	PRODUTO", "Create", null, new { @class = "btn	btn-success" })
+        @Html.ActionLink("Register a new PRODUCT", "Create", null, new { @class = "btn	btn-success" })
     </div>
 
     @section	styles{	<link href="@Url.Content("~/content/DataTables/css/	dataTables.bootstrap.css")" rel="stylesheet"> }

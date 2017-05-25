@@ -2,7 +2,7 @@
 
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "Registrando uma NOVA CATEGORIA";
+    ViewBag.Title = "Registering a NEW CATEGORY";
 
 }
 
@@ -11,7 +11,7 @@
     @Html.AntiForgeryToken()
 
     <div class="panel	panel-primary">
-        <div class="panel-heading">	Registro de	uma NEW CATEGORIE</div>
+        <div class="panel-heading">	Registration of a NEW CATEGORY</div>
         <div class="panel-body">
 
             <div class="form-horizontal">
@@ -27,8 +27,8 @@
         </div>
         <div class="panel-footer panel-info">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Adicionar Category" class="btn btn-danger" />
-                @Html.ActionLink("Retornar para a listagem de Categories", "Index", null, new { @class = "btn btn-warning" })
+                <input type="submit" value="Add Category" class="btn btn-danger" />
+                @Html.ActionLink("Return to the list of Categories", "Index", null, new { @class = "btn btn-warning" })
             </div>
             <br /> <br />
         </div>

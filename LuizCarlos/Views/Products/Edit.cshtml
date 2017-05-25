@@ -2,7 +2,7 @@
 
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "Visualizando os dados de um PRODUTO";
+    ViewBag.Title = "Viewing the data of a PRODUCT";
 }
 
 @using (Html.BeginForm())
@@ -10,7 +10,7 @@
     @Html.AntiForgeryToken()
     <div class="panel panel-primary">
         <div class="panel-heading">
-            Alteração dos dados de um PRODUCT
+            Changing a PRODUCT Data
         </div>
         <div class="panel-body">
             <div class="form-horizontal">
@@ -41,7 +41,7 @@
                 </div>
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
-                        <input type="submit" value="Gravar alterações" class="btn btn-default" />
+                        <input type="submit" value="Save changes" class="btn btn-default" />
                     </div>
                 </div>
             </div>

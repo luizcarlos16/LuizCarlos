@@ -2,11 +2,11 @@
 
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "Alterando os dados de um PRODUTO";
+    ViewBag.Title = "Changing the data of a PRODUCT";
 }
 <div class="panel panel-primary">
     <div class="panel-heading">
-        Visualizando detalhes de um PRODUTO
+        Viewing details of a PRODUCT
     </div>
     <div class="panel-body">
         <div class="form-group">
@@ -62,7 +62,7 @@
         @Html.ActionLink("Edit", "Edit", new
 {
     id = Model.ProductID}, new { @class = "btn btn-info" })
-        @Html.ActionLink("Retornar para a listagem", "Index", null, new { @class = "btn btn-info" })
+        @Html.ActionLink("Return to the list", "Index", null, new { @class = "btn btn-info" })
     </div>
 </div>
 @section ScriptPage {
