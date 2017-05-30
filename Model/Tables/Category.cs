@@ -1,17 +1,15 @@
 ﻿using Model.Registers;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using System.ComponentModel.DataAnnotations.Schema;
+using System;
 
 namespace Model.Tables
 {
     public class Category
     {
-        public long? CategoryID { get; set; }
+        public long CategoryID { get; set; }
         public string Name { get; set; }
-
-        public virtual ICollection<Product> Products { get; set; }
-
+        [NotMapped]
+        public virtual IEnumerable<Product> Products { get; set; }
     }
 }

@@ -1,140 +1,193 @@
-﻿using LuizCarlos.ExtensionMethods;
+﻿using LuizCarlos.Models;
 using Model.Tables;
-using Persistence.Contexts;
+using Newtonsoft.Json;
+using Service.Tables;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 
 namespace LuizCarlos.Controllers
 {
     public class CategoriesController : Controller
     {
-        private EFContexts context = new EFContexts();
 
-
+        private CategoryService service = new CategoryService();
 
         #region [ Actions ]
 
-        #region [ Index ]
-
         // GET: Categories
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            return View(context.Categories.OrderByDescending(categ => categ.Name));
+            var apiModel = new CategoryListAPIModel();
+
+            var resp = await GetFromAPI(response =>
+            {
+                if (response.IsSuccessStatusCode)
+                {
+                    // { Message: "OK", Result: [{},{}]}
+                    string result = response.Content
+                    .ReadAsStringAsync().Result;
+                    apiModel = JsonConvert
+                    .DeserializeObject<CategoryListAPIModel>(result);
+                }
+            });
+
+            return View(apiModel.Result);
         }
 
-        #endregion
+        // GET: Categories/Details/5
+        public async Task<ActionResult> Details(long? id)
+        {
+            return await GetViewById(id);
+        }
 
-        #region [ CREATE ]
+        #region [ Create ]
 
+        // GET: Categories/Create
         public ActionResult Create()
         {
             return View();
         }
 
+        // POST: Categories/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Category category)
+        public ActionResult Create(Category item)
         {
-            context.Categories.Add(category);
-            context.SaveChanges();
-            return RedirectToAction("index");
+            return Save(item);
         }
 
-        #endregion
+        #endregion [ Create ]
 
         #region [ Edit ]
 
-        public ActionResult Edit(long? id)
+        // GET: Categories/Edit/5
+        public async Task<ActionResult> Edit(long? id)
         {
-            if (id == null)
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            Category category = context.Categories.Where(f => f.CategoryID == id).Include("Products.Supplier").First();
-            if (category == null)
-                return HttpNotFound();
-            return View(category);
+            return await GetViewById(id);
         }
 
+        // POST: Categories/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(Category category)
+        public ActionResult Edit(Category item)
         {
-            if (ModelState.IsValid)
-            {
-                var dbEntityEntry = context.Entry(category);
-                dbEntityEntry.State = EntityState.Modified;
-                context.SaveChanges();
-                return RedirectToAction("index");
-            }
-            return View(category);
+            return Save(item);
         }
 
-        #endregion
+        #endregion [ Edit ]
 
         #region [ Delete ]
 
-        public ActionResult Delete(long? id)
+        // GET: Categories/Delete/5
+        public async Task<ActionResult> Delete(long? id)
         {
-            if (id == null)
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            Category category = context.Categories.Where(f => f.CategoryID == id).Include("Products.Supplier").First();
-            if (category == null)
-                return HttpNotFound();
-            return View(category);
+            return await GetViewById(id);
         }
 
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(long? id)
-        {
-
-            context.Categories.Remove(context.Categories.Find(id));
-            context.SaveChanges();
-            return RedirectToAction("index");
-
-        }
-
+        // POST: Categories/Delete/5
         [HttpPost]
-        public ActionResult BatchDelete(int[] deleteInputs)
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(long id)
         {
-
-            if (deleteInputs != null && deleteInputs.Length > 0)
+            try
             {
-                var categs = new List<Category>();
-                foreach (var item in deleteInputs)
-                    categs.Add(context.Categories.Find(item));
+                var item = service.Delete(id);
 
+                TempData["Message"] = string.Format(
+                    "Category {0} was removed.",
+                    item.Name.ToUpper());
 
-                context.Categories.RemoveRange(categs);
-                context.SaveChanges();
+                return RedirectToAction("Index");
             }
-            return RedirectToAction("Index");
+            catch
+            {
+                return View();
+            }
         }
 
+        #endregion [ Edit ]
 
-        #endregion
+        #endregion [ Actions ]
 
-        #region [ Details ]
+        #region [ Methods ]
 
-        public ActionResult Details(long? id)
+        private async Task<ActionResult> GetViewById(long? id)
         {
             if (id == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            Category category = context.Categories.Where(f => f.CategoryID == id).Include("Products.Supplier").First();
-            if (category == null)
-                return HttpNotFound();
-            return View(category);
+
+            CategoryAPIModel item = null;
+            var resp = await GetFromAPI(response =>
+            {
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = response.Content
+                    .ReadAsStringAsync().Result;
+                    item = JsonConvert
+                    .DeserializeObject<CategoryAPIModel>(result);
+                }
+            }, id.Value);
+
+            if (!resp.IsSuccessStatusCode)
+                return new HttpStatusCodeResult(resp.StatusCode);
+
+            if (item.Message == "!OK" ||
+                item.Result == null) return HttpNotFound();
+
+            return View(item.Result);
         }
 
-        #endregion
-
-        #endregion
-
-        public string ContaPalavra(string word = "")
+        private async Task<HttpResponseMessage> GetFromAPI(
+            Action<HttpResponseMessage> action,
+            long? id = null)
         {
-            return string.Format("The '{0}' has '{1}' chars", word, word.WordCount());
+            using (var client = new HttpClient())
+            {
+                var reqUrl = HttpContext.Request.Url;
+                var baseUrl = string.Format("{0}://{1}",
+                    reqUrl.Scheme, reqUrl.Authority);
+                client.BaseAddress = new Uri(baseUrl);
+                client.DefaultRequestHeaders.Clear();
+
+                var url = "Api/Categories";
+                if (id != null) url += "/" + id;
+
+                var request = await client.GetAsync(url);
+                //HttpContent content = new HttpContent();
+                ////content.
+                //var r = client.PostAsync(url, content);
+
+                if (action != null)
+                    action.Invoke(request);
+
+                return request;
+            }
         }
+
+        private ActionResult Save(Category item)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    service.Save(item);
+                    return RedirectToAction("Index");
+                }
+                return View(item);
+            }
+            catch
+            {
+                return View(item);
+            }
+        }
+
+        #endregion [ Methods ]
+
     }
 }

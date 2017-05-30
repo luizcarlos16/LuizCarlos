@@ -1,5 +1,6 @@
-﻿using Persistence.DAL.Registers;
-using Model.Registers;
+﻿using Model.Registers;
+using Persistence.DAL.Registers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,23 +10,28 @@ namespace Service.Registers
 {
     public class ProductService
     {
-        private ProductsDAL dal = new ProductsDAL();
-        public IEnumerable<Product>
-        GetOrderedByName()
+        private ProductDAL dal = new ProductDAL();
+
+        public IQueryable<Product> Get()
         {
-            return dal.GetOrderByName();
+            return dal.Get();
         }
+
+        public IQueryable<Product> GetOrderedByName()
+        { return dal.GetOrderedByName(); }
+
         public Product ById(long id)
-        {
-            return dal.ById(id);
-        }
+        { return dal.ById(id); }
+
         public void Save(Product product)
-        {
-            dal.Save(product);
-        }
+        { dal.Save(product); }
+
         public Product Delete(long id)
+        { return dal.Delete(id); }
+
+        public IQueryable<Product> GetByCategory(long categoryId)
         {
-            return dal.Delete(id);
+            return dal.GetByCategory(categoryId);
         }
     }
 }

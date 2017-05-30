@@ -1,127 +1,157 @@
-﻿using System;
+﻿using Model.Registers;
+using Newtonsoft.Json;
+using Service.Registers;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
+using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Mvc;
-using Model.Registers;
-using Persistence.Contexts;
 
 namespace LuizCarlos.Controllers
 {
     public class SuppliersController : Controller
     {
+        private SupplierService service = new SupplierService();
 
-        private EFContexts context = new EFContexts();
-//        private object dbEntityEntry;
+        #region [ Actions ]
 
-
-        #region [ Action ]
-        // GET: Suppliers
-        //GET: Suppliers/Index
-        public ActionResult Index()
+        // GET: Categories
+        public async Task<ActionResult> Index()
         {
-            return View(context.Suppliers.OrderBy(supplier => supplier.Name));
+
+            var list = new List<Supplier>();
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(HttpContext.Request.Url.AbsoluteUri);
+
+                client.DefaultRequestHeaders.Clear();
+
+                var response = await client.GetAsync("Api/Categoreis");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = response.Content
+                        .ReadAsStringAsync().Result;
+                    list = JsonConvert.DeserializeObject<List<Supplier>>(result);
+
+                }
+            }
+
+            return View(list);
         }
-        #endregion [ Action ]
+
+        // GET: Categories/Details/5
+        public ActionResult Details(long? id)
+        {
+            return GetViewById(id);
+        }
 
         #region [ Create ]
-        //GET: Supplier
+
+        // GET: Categories/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        //POST: Suppliers
+        // POST: Categories/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Supplier supplier)
+        public ActionResult Create(Supplier item)
         {
-            context.Suppliers.Add(supplier);
-            context.SaveChanges();
-            return RedirectToAction("Index");
+            return Save(item);
         }
+
         #endregion [ Create ]
 
         #region [ Edit ]
-        //GET: Suppliers/Edit/S 
+
+        // GET: Categories/Edit/5
         public ActionResult Edit(long? id)
         {
-            if (id == null)
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            Supplier supplier = context.Suppliers.Where(f => f.SupplierID == id).Include("Products.Category").First();
-            //Supplier supplier = context.Suppliers.Find(id);
-
-            if (supplier == null)
-                return HttpNotFound();
-
-            return View(supplier);
+            return GetViewById(id);
         }
 
-        //POST: Suppliers/Edit
+        // POST: Categories/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(Supplier supplier)
+        public ActionResult Edit(Supplier item)
         {
-            if (ModelState.IsValid)
-            {
-                var dbEntityEntry = context.Entry(supplier);
-                dbEntityEntry.State = EntityState.Modified;
-                context.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(supplier);
+            return Save(item);
         }
-        #endregion [Edit]
 
-        #region [Delete]
-        //GET: Suppliers/Delete/S 
+        #endregion [ Edit ]
+
+        #region [ Delete ]
+
+        // GET: Categories/Delete/5
         public ActionResult Delete(long? id)
         {
-            if (id == null)
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-
-            Supplier supplier = context.Suppliers.Where(f => f.SupplierID == id).Include("Products.Category").First();
-
-            if (supplier == null)
-                return HttpNotFound();
-
-            return View(supplier);
+            return GetViewById(id);
         }
 
-        //POST: Suppliers/Delete
+        // POST: Categories/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(long id)
         {
-            Supplier supplier = context.Suppliers.Find(id);
-            context.Suppliers.Remove(supplier);
-            context.SaveChanges();
-            TempData["Message"] = "Fabricante	" + supplier.Name.ToUpper() + "	foi	removido";
-            return RedirectToAction("Index");
+            try
+            {
+                var item = service.Delete(id);
+
+                TempData["Message"] = string.Format(
+                    "Supplier {0} was removed.",
+                    item.Name.ToUpper());
+
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                return View();
+            }
         }
 
-        #endregion[Delete]
+        #endregion [ Edit ]
 
-        #region [Details]
-        //GET: Suppliers/Edit/S 
-        public ActionResult Details(long? id)
+        #endregion [ Actions ]
+
+        #region [ Methods ]
+
+        private ActionResult GetViewById(long? id)
         {
             if (id == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-            Supplier supplier = context.Suppliers.Where(f => f.SupplierID == id).Include("Products.Category").First();
-        
+            var item = service.ById(id.Value);
 
-
-            if (supplier == null)
+            if (item == null)
                 return HttpNotFound();
 
-            return View(supplier);
+            return View(item);
         }
-        #endregion [Details]
 
+        private ActionResult Save(Supplier item)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    service.Save(item);
+                    return RedirectToAction("Index");
+                }
+                return View(item);
+            }
+            catch
+            {
+                return View(item);
+            }
+        }
+
+        #endregion [ Methods ]
 
     }
 }

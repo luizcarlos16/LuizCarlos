@@ -8,11 +8,14 @@ namespace LuizCarlos.Models
 {
     public class CategoryListAPIModel : APIModel
     {
-        public IQueryable<Category> Result
+        // { Message: "OK", Result: [{},{}] }
+        public List<Category> Result
         { get; set; }
     }
-    public class CategoryModel
+
+    public class CategoryAPIModel : APIModel
     {
+        // { Message: "OK", Result: {} }
         public Category Result
         { get; set; }
     }

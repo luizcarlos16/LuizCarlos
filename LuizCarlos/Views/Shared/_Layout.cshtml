@@ -1,52 +1,47 @@
-﻿<!DOCTYPE	html>
+﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta name="viewport" content="width=device-width,initial-scale=1.0" charset="utf-8" />
+    <meta name="viewport"
+          content="width=device-width,
+                   initial-scale=1.0" />
     <title>@ViewBag.Title</title>
-    <link href="@Url.Content("~/content/bootstrap.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/content/bootstrap.css")"
+          rel="stylesheet" />
     @RenderSection("styles", false)
 </head>
 <body>
     <div class="container">
         <div class="row">
-            <div class="page-header	bg-danger">
-                <h1>
-                    Developing	in	ASP.NET	MVC
-                    <small class="text-danger">
-                        Using 	Bootstrap
-                    </small>
-                </h1>
+            <div class="page-header bg-danger">
+                <h1>Developing with ASP.NET MVC<small class="text-danger">Using Bootstrap</small></h1>
             </div>
         </div>
+
         <div class="row">
-            <div class="col-xs-3	col-md-3	bg-success">
-                <ul class="nav	nav-pills	nav-stacked">
-                    <li id="liHome" role="presentation" class="active"><a href="#">Home</a></li>
-                    <li id="liCategories" role="presentation">@Html.ActionLink("Categories", "Index", "Categories")
-                    </li>
-                    <li id="liSuppliers" role="presentation">@Html.ActionLink("Suppliers", "Index", "Suppliers")
-                    </li>
+            <div class="col-xs-3 col-md-3 bg-success">
+                <ul class="nav nav-pills nav-stacked">
+                    <li id="liHome" role="presentation"><a href="#">Home</a></li>
+                    <li id="liCategories" role="presentation">@Html.ActionLink("Categories", "Index", "Categories")</li>
+                    <li id="liSuppliers" role="presentation">@Html.ActionLink("Suppliers", "Index", "Suppliers")</li>
                     <li id="liProducts" role="presentation">@Html.ActionLink("Products", "Index", "Products")
-                    </li>
-                </ul>
-            </div>
-            <div class="col-xs-9	col-md-9">
-                <br />
-                @RenderBody()
-            </div>
+                </li>
+            </ul>
         </div>
-        <br />
-        <div class="row">
-            <div class="col-xs-12	col-md-12	bg-danger">
-                <small>Layout with Bootstrap Made by Luiz Carlos</small>
-            </div>
+        <div class="col-xs-9 col-md-9">
+            <br />
+            @RenderBody()
         </div>
     </div>
-    <script src="@Url.Content(
-        "~/scripts/jquery-3.1.1.js")">
-    </script>
-    <script src="@Url.Content("~/scripts/bootstrap.js")">
-    </script>
-    @RenderSection("ScriptPage", false)
+
+    <br />
+    <div class="row">
+        <div class="col-xs-12 col-md-12 bg-danger">
+            <small>Layout with Bootstrap Made by Luiz Carlos</small>
+        </div>
+    </div>
+</div>
+<script src="@Url.Content("~/Scripts/jquery-3.1.1.js")"></script>
+<script src="@Url.Content("~/Scripts/bootstrap.js")"></script>
+@RenderSection("ScriptPage", false)
 </body>
 </html>

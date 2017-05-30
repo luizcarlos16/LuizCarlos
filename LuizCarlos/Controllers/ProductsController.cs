@@ -40,16 +40,16 @@ namespace LuizCarlos.Controllers
             if (product == null)
             {
                 ViewBag.CategoryId = new SelectList(categoryService.GetOrderedByName(),
-                    "CategoryId", "Name");
+                    "CategoryID", "Name");
                 ViewBag.SupplierId = new SelectList(supplierService.GetOrderedByName(),
-                    "SupplierId", "Name");
+                    "SupplierID", "Name");
             }
             else
             {
-                ViewBag.CategoriaId = new SelectList(categoryService.GetOrderedByName(),
-                    "CategoryId", "Name", product.CategoryID);
+                ViewBag.CategoriaID = new SelectList(categoryService.GetOrderedByName(),
+                    "CategoryID", "Name", product.CategoryID);
                 ViewBag.S = new SelectList(supplierService.GetOrderedByName(),
-                    "SupplierId", "Name", product.SupplierID);
+                    "SupplierID", "Name", product.SupplierID);
             }
         }
         #region [ Edit ]
@@ -114,7 +114,7 @@ namespace LuizCarlos.Controllers
             try
             {
                 Product product = productService.Delete(id);
-                TempData["Message"] = "Produto	" + product.Name.ToUpper() + "	foi	removido";
+                TempData["Message"] = "Product	" + product.Name.ToUpper() + "was removed";
                 return RedirectToAction("Index");
             }
             catch

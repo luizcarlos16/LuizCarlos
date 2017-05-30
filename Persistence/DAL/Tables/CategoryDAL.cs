@@ -1,50 +1,60 @@
 ﻿using Model.Tables;
 using Persistence.Contexts;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System;
 
 namespace Persistence.DAL.Tables
-{
-    public class CategoryDAL
-    {
+ {
+        public class CategoryDAL
+        {
             private EFContexts context = new EFContexts();
 
-            public IEnumerable<Category>
-              GetOrderByName()
+            public IQueryable<Category> Get()
+            {
+                return context
+                    .Categories;
+            }
+
+            public IQueryable<Category> GetOrderedByName()
+            {
+                return context.Categories
+                    .OrderBy(b => b.Name);
+            }
+
+            private string GetName(Category b)
+            {
+                if (b.CategoryID > 0)
+                    return b.Name;
+                return string.Empty;
+            }
+
+            public Category ById(long id)
             {
                 return context
                     .Categories
-                    .OrderBy(p => p.Name);
-            }
-            public Category ById(long id)
-            {
-                return context.Categories
-                    .Where(p => p.CategoryID == id)
-                    .Include("Products.Category")
+                    .Where(s => s.CategoryID == id)
                     .First();
             }
 
-        public void Save(Category category)
-        {
-            if (category.CategoryID == null)
+            public void Save(Category item)
             {
-                context.Categories.Add(category);
-            }
-            else
-            {
-                context.Entry(category).State = EntityState.Modified;
-            }
+                if (item.CategoryID == 0)
+                    context.Categories.Add(item);
+                else
+                    context.Entry(item).State = EntityState.Modified;
 
-            context.SaveChanges();
-
-        }
-        public Category Delete(long id)
-            {
-                var category = ById(id);
-                context.Categories.Remove(category);
                 context.SaveChanges();
-                return category;
+            }
+
+            public Category Delete(long id)
+            {
+                var item = ById(id);
+
+                context.Categories.Remove(item);
+                context.SaveChanges();
+
+                return item;
             }
         }
     }

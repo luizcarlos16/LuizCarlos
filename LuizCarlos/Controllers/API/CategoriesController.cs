@@ -1,80 +1,69 @@
-﻿using Model.Tables;
-using Newtonsoft.Json;
-using Persistence.Contexts;
+﻿using LuizCarlos.Models;
+using Model.Tables;
+using Service.Registers;
 using Service.Tables;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Mvc;
 
 namespace LuizCarlos.Controllers.API
 {
     public class CategoriesController : ApiController
     {
-        public EFContexts context = new EFContexts();
+        private CategoryService service = new CategoryService();
+        private ProductService productService = new ProductService();
 
-        private CategoryService categoryService = new CategoryService();
-
-        private async Task<ActionResult>GetViewCategoryById(long? id)
+        // GET: api/Categories
+        public CategoryListAPIModel Get()
         {
-            if (id == null)
+            var apiModel = new CategoryListAPIModel();
+
+            try
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                apiModel.Result = service.Get().ToList();
+            }
+            catch (System.Exception)
+            {
+                apiModel.Message = "!OK";
             }
 
-            Category item = null;
-
-            var resp = await FromApi(id.Value, response =>
-            {
-                if (response.IsSuccessStatusCode)
-                {
-                    var result = response.Content.ReadAsStringAsync().Result;
-                    item = JsonConvert.DeserialezeObject<Category>(result);
-                }
-            });
-
-            if (!resp.IsSucessStatusCode)
-                return new HttpStatusCodeResult(resp.StatusCode);
-            if (item == null)
-                return HttpNotFound();
-
-            return View(item);
-
-        }
-
-      /*  // GET: api/Categories
-        public IEnumerable<Category> Get()
-        {
-            return (context.Categories.OrderByDescending(categ => categ.Name));
+            return apiModel;
         }
 
         // GET: api/Categories/5
-        public Category Get(int id)
+        public CategoryAPIModel Get(long? id)
         {
-            return service.ById(id);
+            var apiModel = new CategoryAPIModel();
+
+            try
+            {
+                if (id == null)
+                    apiModel.Message = "!OK";
+                else
+                {
+                    apiModel.Result = service.ById(id.Value);
+                    if (apiModel.Result != null)
+                        apiModel.Result.Products = productService
+                            .GetByCategory(id.Value).ToList();
+                }
+            }
+            catch (System.Exception)
+            {
+                apiModel.Message = "!OK";
+            }
+
+            return apiModel;
         }
 
         // POST: api/Categories
-        public void Post([FromBody] Category value)
-        {
-            service.Save(value);
-        }
+        public void Post([FromBody]Category value)
+        { service.Save(value); }
 
         // PUT: api/Categories/5
-        public void Put(int id, [FromBody] Category value)
-        {
-            Service.Save(value);
-        }
+        public void Put(int id, [FromBody]Category value)
+        { service.Save(value); }
 
         // DELETE: api/Categories/5
-        public Category Delete(int id)
-        {
-            return dal.Delete(id);
-           
-        }*/
+        public void Delete(int id)
+        { service.Delete(id); }
     }
 }
